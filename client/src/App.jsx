@@ -844,14 +844,7 @@ function App() {
               >
                 {isProcessing ? 'Processing Payment...' : 'Checkout with Direct Transfer'}
               </button>
-              
-              <button 
-                onClick={checkoutWithContract}
-                disabled={!signer || isProcessing}
-                className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-md transition-colors"
-              >
-                {isProcessing ? 'Processing...' : 'Checkout with Smart Contract (Demo)'}
-              </button>
+            
               
               {!signer && (
                 <p className="text-center text-sm text-gray-500 mt-2">
