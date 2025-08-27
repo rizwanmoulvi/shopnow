@@ -16,7 +16,7 @@ function App() {
   const [usdtBalance, setUsdtBalance] = useState('0');
 
   // Hardcoded addresses for demo (Kairos testnet)
-  const [merchant] = useState('0x16c0fE65ec9e622ba48a2623b2Dffe8ECF59f6F4'); // Demo merchant address
+  const [merchant, setMerchant] = useState('0x16c0fE65ec9e622ba48a2623b2Dffe8ECF59f6F4'); // Demo merchant address - can be updated
   const usdtAddress = '0xc1AcB79cCc976B70A7b057D689173823c61D4eD6'; // Kairos USDT address
   const contractAddress = '0x5A7890D210DC7C61900c11B460D1346f483A6a3c'; // Deployed contract address (placeholder)
   
@@ -776,7 +776,9 @@ function App() {
         <MerchantSetup 
           signer={signer} 
           contractAddress={contractAddress} 
-          contractABI={contractABI} 
+          contractABI={contractABI}
+          currentMerchant={merchant}
+          onMerchantUpdate={setMerchant}
         />
       </div>
 
