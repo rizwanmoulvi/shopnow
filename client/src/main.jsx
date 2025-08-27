@@ -16,8 +16,30 @@ const renderApp = () => {
 const LIFF_ID = import.meta.env.VITE_LIFF_ID || '2008002087-6oJNrWNP';
 const isDevelopment = import.meta.env.DEV || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-if (LIFF_ID && LIFF_ID !== 'YOUR_LIFF_ID' && !isDevelopment) {
-  // Try to initialize LIFF only in production
+// More robust LINE app detection
+const isInLineApp = () => {
+  const userAgent = navigator.userAgent;
+  return (
+    userAgent.includes('Line') ||
+    window.location.search.includes('liff.state') ||
+    window.location.hash.includes('liff.state') ||
+    document.referrer.includes('line.me')
+  );
+};
+
+console.log('Environment check:', {
+  LIFF_ID,
+  isDevelopment,
+  hostname: window.location.hostname,
+  isInLineApp: isInLineApp(),
+  userAgent: navigator.userAgent,
+  search: window.location.search,
+  referrer: document.referrer
+});
+
+// Only initialize LIFF if we're definitely in the LINE app environment
+if (LIFF_ID && LIFF_ID !== 'YOUR_LIFF_ID' && !isDevelopment && isInLineApp()) {
+  console.log('Attempting LIFF initialization...');
   liff.init({ liffId: LIFF_ID })
     .then(() => {
       console.log('LIFF initialized successfully');
@@ -28,7 +50,12 @@ if (LIFF_ID && LIFF_ID !== 'YOUR_LIFF_ID' && !isDevelopment) {
       renderApp();
     });
 } else {
-  // Run in development/standalone mode without LIFF
-  console.log(isDevelopment ? 'Running in development mode without LIFF' : 'Running in standalone mode without LIFF');
+  // Run in standalone mode without LIFF
+  const reason = isDevelopment 
+    ? 'development mode' 
+    : !isInLineApp() 
+      ? 'not in LINE app (accessed directly)' 
+      : 'standalone mode';
+  console.log(`Running in ${reason} without LIFF`);
   renderApp();
 }
